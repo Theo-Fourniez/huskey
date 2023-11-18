@@ -1,0 +1,6 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./Cargo.toml",
+        "./huskey-gui/src-tauri/Cargo.toml"
+    ]
+}
