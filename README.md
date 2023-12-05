@@ -6,4 +6,5 @@
 * [AES-GCM](https://www.cryptosys.net/pki/manpki/pki_aesgcmauthencryption.html) : for encrypting the database file (AES256 used)
 ### Improvements
 - [ ] Protecting the process against low priviledged attackers ? (using the secmem-proc crate)
-- [ ] Support for ChaCha20
+- [ ] Support for other encryption algorithms like ChaCha20
+- [ ] Add 2FA support
