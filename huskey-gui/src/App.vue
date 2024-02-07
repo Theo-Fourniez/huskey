@@ -27,9 +27,6 @@ async function openDatabaseCommand() {
 
 }
 
-function handleSelectedPath(path: string) {
-  selectedPath.value = path;
-}
 </script>
 
 <template>
@@ -54,7 +51,7 @@ function handleSelectedPath(path: string) {
     </div>
     <PasswordEntriesTable v-if="db && db.entries" :entries="db?.entries" />
     <h1 v-else>No entries</h1>
-    <FileSelector @selected="$event => handleSelectedPath($event)" />
+    <FileSelector @selected="$path => selectedPath = $path" />
     <button @click="openDatabaseCommand">Open database</button>
   </div>
 </template>
