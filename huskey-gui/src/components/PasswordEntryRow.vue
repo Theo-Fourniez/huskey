@@ -1,11 +1,10 @@
 <script setup lang="ts">
+import { PasswordEntry } from "@/types/huskeyTypes";
 import { computed, ref } from "vue";
-const path = ref("");
 
-const emit = defineEmits<{
-}>()
-
-const props = defineProps(['entry']);
+const props = defineProps<{
+    entry: PasswordEntry
+}>();
 
 const iconUrl = computed(() => {
     return props.entry.url ? `https://www.google.com/s2/favicons?domain=${props.entry.url}&sz=32` : '';
