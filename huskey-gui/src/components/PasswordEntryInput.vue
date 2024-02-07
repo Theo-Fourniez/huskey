@@ -22,7 +22,9 @@ const hasPassedEntry = computed(() => {
     return props.entry !== undefined;
 });
 
-const emit = defineEmits<{ (event: 'change', entry: PasswordEntry): void }>();
+const emit = defineEmits<{
+  change: [entry: PasswordEntry]
+}>();
 
 const iconUrl = computed(() => {
     return hasPassedEntry.value ? props.entry!.url ? `https://www.google.com/s2/favicons?domain=${props.entry!.url}&sz=32` : undefined : undefined;

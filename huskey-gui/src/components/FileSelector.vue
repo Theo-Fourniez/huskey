@@ -5,8 +5,8 @@ import { open } from "@tauri-apps/api/dialog";
 const path = ref("");
 
 const emit = defineEmits<{
-  (event: 'selected', path: string): void
-}>()
+  selected: [path: string]
+}>();
 
 const props = defineProps({
   browseBtnText: {
