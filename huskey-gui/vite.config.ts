@@ -4,7 +4,9 @@ import vue from "@vitejs/plugin-vue";
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
   plugins: [vue()],
-
+  resolve: {
+    alias: [{ find: '@', replacement: '/src' }],
+  },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   // prevent vite from obscuring rust errors
   clearScreen: false,

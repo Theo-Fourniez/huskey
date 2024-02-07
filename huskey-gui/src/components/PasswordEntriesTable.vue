@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { PasswordEntry } from '@/types/huskeyTypes';
+import PasswordEntryRow from './PasswordEntryRow.vue';
 
 
-import PasswordEntry from "./PasswordEntry.vue";
+defineProps<{
+    entries?: PasswordEntry[]
+}>();
 
-const props = defineProps(['entries']);
 </script>
 
 <template>
@@ -17,7 +19,7 @@ const props = defineProps(['entries']);
             <th>URL?</th>
         </thead>
         <tbody>
-            <PasswordEntry v-if="props.entries" v-for="entry in props.entries" :entry="entry" />
+            <PasswordEntryRow v-if="entries" v-for="entry in entries" :entry="entry" />
             <div v-else>No entries in this database</div>
         </tbody>
     </table>

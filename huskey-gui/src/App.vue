@@ -5,7 +5,7 @@ import FileSelector from "./components/FileSelector.vue";
 import PasswordEntry from "./components/PasswordEntry.vue";
 import { invoke } from '@tauri-apps/api/tauri'
 
-import { HuskeyDatabase } from '@huskey-gui/types/huskeyTypes';
+import { HuskeyDatabase } from '@/types/huskeyTypes';
 import { handleError, ref } from "vue";
 import PasswordEntriesTable from "./components/PasswordEntriesTable.vue";
 import { message } from "@tauri-apps/api/dialog";
