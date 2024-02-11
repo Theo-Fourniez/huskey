@@ -1,3 +1,7 @@
+//! It is a library that can be used to create, read, update and delete passwords from a database.
+//! The database is encrypted and saved to disk.
+//! Using AES-256-GCM for encryption and PBKDF2 for key derivation.
+
 use std::path::Path;
 
 use database::{Database, DatabaseError, EncryptedDatabase};
