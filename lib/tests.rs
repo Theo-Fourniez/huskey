@@ -55,7 +55,7 @@ mod tests {
             let read_salt = SaltString::from_b64(&encrypted_db.encryption_params.salt).unwrap();
             let key: MasterKey = MasterKey::new(String::from("password"));
 
-            let encryption_params = key.to_decrypt_params(Some(read_salt), None).unwrap();
+            let encryption_params = key.to_decrypt_params(Some(read_salt), Some(1000)).unwrap();
 
             let mut db = encrypted_db
                 .decrypt(encryption_params.secret_key.clone())
