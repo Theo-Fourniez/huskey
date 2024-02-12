@@ -64,8 +64,7 @@ fn save_database(
 fn main() {
     tauri::Builder::default()
         .manage(OpenedDatabase::default())
-        .invoke_handler(tauri::generate_handler![open_database])
-        .invoke_handler(tauri::generate_handler![save_database])
+        .invoke_handler(tauri::generate_handler![open_database, save_database])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
