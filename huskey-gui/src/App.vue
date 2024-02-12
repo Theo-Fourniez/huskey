@@ -17,12 +17,13 @@ async function openDatabaseCommand() {
   console.log("Open database")
   try {
     db.value = await invoke<HuskeyDatabase>('open_database', { path: selectedPath.value, password: 'password' });
+    console.log("Set the database value");
   } catch (e) {
+    console.error(e);
     if (e instanceof Object) {
       await message(Object.values(e)[0]
         , { title: "Could not open database", type: "error", "okLabel": "Ok" });
     }
-
   }
 
 }
@@ -30,22 +31,20 @@ async function openDatabaseCommand() {
 </script>
 
 <template>
-  <div class="container">
-    <h1>Welcome to Huskey</h1>
-    <div class="row">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-    </div>
+  <!-- A little header in the top left corner with the title of the app-->
+  <div class="header">
+    <h1>Huskey</h1>
+  </div>
+  <div>
     <div class="container">
       <div class="row">
         <div class="card">
           <h2>Create a database</h2>
-          <img src="/tauri.svg" alt="" class="logo">
+          <a style="font-size: 2.5rem; color: #f7f7f7;">🛠️</a>
         </div>
         <div class="card">
           <h2>Open a database</h2>
-          <img src="/tauri.svg" alt="" class="logo">
+          <a style="font-size: 2.5rem; color: #f7f7f7;" @click="openDatabaseCommand">🔑</a>
         </div>
       </div>
     </div>
@@ -76,5 +75,16 @@ async function openDatabaseCommand() {
 
 .card:hover {
   filter: drop-shadow(0 0 2em #747bff);
+  color: #747bff;
+}
+
+.header{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1vw;
+  color: #ffffffd8;
+  font-size: 0.75rem;
+  background-color: #343434;
 }
 </style>
