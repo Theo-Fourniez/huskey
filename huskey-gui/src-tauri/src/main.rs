@@ -13,10 +13,17 @@ use std::{
 use huskey_lib::{create_or_read_db, database::Database, decrypt_db, encrypt_and_save_db};
 impl Default for OpenedDatabase {
     fn default() -> Self {
-        return OpenedDatabase(Mutex::new(None));
+        return OpenedDatabase {
+            database: Mutex::new(None),
+            cached_password: Mutex::new(None),
+        };
     }
 }
-struct OpenedDatabase(Mutex<Option<Database>>);
+
+struct OpenedDatabase {
+    database: Mutex<Option<Database>>,
+    cached_password: Mutex<Option<String>>,
+}
 
 #[tauri::command]
 async fn open_database(
@@ -32,7 +39,7 @@ async fn open_database(
 
     match decrypted_db {
         Ok(db) => {
-            let mut d = opened_database.0.lock().unwrap();
+            let mut d = opened_database.database.lock().unwrap();
             *d = Some(db.clone());
             return Ok(db);
         }
@@ -49,7 +56,7 @@ async fn save_database(
     password: String,
     maybe_database: tauri::State<'_, OpenedDatabase>,
 ) -> Result<(), AppError> {
-    let mutx = maybe_database.0.lock().unwrap();
+    let mutx = maybe_database.database.lock().unwrap();
     match mutx.deref() {
         Some(db) => {
             let path = Path::new(path);
