@@ -1,5 +1,3 @@
-use std::time::Instant;
-
 use pbkdf2::Params;
 use rand_core::OsRng;
 use sha2::Digest;
