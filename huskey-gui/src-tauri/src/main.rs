@@ -19,16 +19,15 @@ impl Default for OpenedDatabase {
 struct OpenedDatabase(Mutex<Option<Database>>);
 
 #[tauri::command]
-fn open_database(
+async fn open_database(
     path: &str,
     password: String,
-    opened_database: tauri::State<OpenedDatabase>,
+    opened_database: tauri::State<'_, OpenedDatabase>,
 ) -> Result<Database, AppError> {
     println!("Trying to open db at {}", path);
     let input_path: PathBuf = PathBuf::from(path);
 
     let encrypted_db = create_or_read_db(&input_path)?;
-
     let decrypted_db = decrypt_db(encrypted_db, password.clone());
 
     match decrypted_db {
@@ -45,10 +44,10 @@ fn open_database(
 }
 
 #[tauri::command]
-fn save_database(
+async fn save_database(
     path: &str,
     password: String,
-    maybe_database: tauri::State<OpenedDatabase>,
+    maybe_database: tauri::State<'_, OpenedDatabase>,
 ) -> Result<(), AppError> {
     let mutx = maybe_database.0.lock().unwrap();
     match mutx.deref() {
