@@ -140,7 +140,7 @@ mod tests {
     }
 
     #[test]
-    fn test_changing_pbdkf2_rounds_number() {
+    fn test_changing_pbkdf2_rounds_number() {
         run_db_test(|path| {
             let password = String::from("password");
 
@@ -151,16 +151,16 @@ mod tests {
             // Change the number of rounds
             let db = read_db(&path).unwrap();
             let decrypted_db = decrypt_db(db, password.clone()).unwrap();
-            assert_eq!(decrypted_db.pbdkf2_rounds, 1000);
+            assert_eq!(decrypted_db.pbkdf2_rounds, 1000);
             let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, Some(1234));
 
             // Verify that the number of rounds has been changed
             let db = read_db(&path).unwrap();
-            assert_eq!(db.encryption_params.pbdkf2_rounds, 1234);
+            assert_eq!(db.encryption_params.pbkdf2_rounds, 1234);
 
             // Verify that we can still open the database
             let decrypted_db = decrypt_db(db, password.clone()).unwrap();
-            assert_eq!(decrypted_db.pbdkf2_rounds, 1234);
+            assert_eq!(decrypted_db.pbkdf2_rounds, 1234);
         });
     }
 

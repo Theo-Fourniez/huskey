@@ -46,10 +46,10 @@ impl MasterKey {
     pub(crate) fn to_decrypt_params(
         &self,
         optional_salt: Option<SaltString>,
-        pbdkf2_rounds: Option<u32>,
+        pbkdf2_rounds: Option<u32>,
     ) -> Result<DatabaseEncryptionParams, pbkdf2::password_hash::Error> {
         let salt = optional_salt.unwrap_or(SaltString::generate(&mut OsRng));
-        let rounds = pbdkf2_rounds.unwrap_or(Self::DEFAULT_ROUNDS);
+        let rounds = pbkdf2_rounds.unwrap_or(Self::DEFAULT_ROUNDS);
         let full_master_key = self.password.clone().sha512();
         let master_key_hash = Pbkdf2.hash_password_customized(
             full_master_key.as_bytes(),
@@ -64,8 +64,8 @@ impl MasterKey {
 
         Ok(DatabaseEncryptionParams {
             secret_key: master_key_hash.hash.unwrap().to_string(),
-            pbdkf2_salt: salt,
-            pbdkf2_rounds: rounds,
+            pbkdf2_salt: salt,
+            pbkdf2_rounds: rounds,
         })
     }
 }

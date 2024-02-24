@@ -64,7 +64,7 @@ impl From<serde_json::Error> for DatabaseError {
 #[derive(Serialize, Clone)] // serialize is needed for the frontend; maybe there is a better way to do this
 pub struct Database {
     #[serde(skip)]
-    pub pbdkf2_rounds: u32,
+    pub pbkdf2_rounds: u32,
     pub(crate) entries: Vec<PasswordEntry>,
 }
 
@@ -72,7 +72,7 @@ pub struct Database {
 pub(crate) struct RawDatabaseEncryptionParams {
     nonce: FixedNonce,
     pub(crate) salt: String,
-    pub(crate) pbdkf2_rounds: u32,
+    pub(crate) pbkdf2_rounds: u32,
 }
 
 impl Default for EncryptedDatabase {
@@ -81,7 +81,7 @@ impl Default for EncryptedDatabase {
             encryption_params: RawDatabaseEncryptionParams {
                 nonce: generate_nonce().into(),
                 salt: SaltString::generate(&mut OsRng).to_string(),
-                pbdkf2_rounds: 250_000,
+                pbkdf2_rounds: 250_000,
             },
             entries: Vec::new(),
         }
@@ -109,7 +109,7 @@ impl EncryptedDatabase {
                     })?;
                 Ok(Database {
                     entries,
-                    pbdkf2_rounds: self.encryption_params.pbdkf2_rounds,
+                    pbkdf2_rounds: self.encryption_params.pbkdf2_rounds,
                 })
             }
             Err(_) => Err(DatabaseError::DecryptError),
@@ -135,8 +135,8 @@ impl Database {
             Ok(raw_entries) => Ok(EncryptedDatabase {
                 encryption_params: RawDatabaseEncryptionParams {
                     nonce: new_nonce.into(),
-                    salt: params.pbdkf2_salt.to_string(),
-                    pbdkf2_rounds: params.pbdkf2_rounds,
+                    salt: params.pbkdf2_salt.to_string(),
+                    pbkdf2_rounds: params.pbkdf2_rounds,
                 },
                 entries: raw_entries,
             }),
@@ -198,7 +198,7 @@ impl Default for Database {
     fn default() -> Self {
         Self {
             entries: Default::default(),
-            pbdkf2_rounds: MasterKey::DEFAULT_ROUNDS,
+            pbkdf2_rounds: MasterKey::DEFAULT_ROUNDS,
         }
     }
 }
@@ -229,8 +229,8 @@ pub(crate) struct DatabaseEncryptionParams {
     /// The actual key used to encrypt and decrypt the database
     pub(crate) secret_key: String,
     /// The salt that has been used for the secret_key derivation
-    pub(crate) pbdkf2_salt: SaltString,
-    pub(crate) pbdkf2_rounds: u32,
+    pub(crate) pbkdf2_salt: SaltString,
+    pub(crate) pbkdf2_rounds: u32,
 }
 
 fn try_open_truncate_from_path(path: &Path) -> Result<File, io::Error> {

@@ -30,33 +30,33 @@ pub fn decrypt_db(db: EncryptedDatabase, password: String) -> Result<Database, D
         .expect("Could not decode the salt from the database");
 
     let encryption_params = encryption_key
-        .to_decrypt_params(Some(salt), Some(db.encryption_params.pbdkf2_rounds))
-        .expect("Could not derive the users password with PBDKF2 while decrypting");
+        .to_decrypt_params(Some(salt), Some(db.encryption_params.pbkdf2_rounds))
+        .expect("Could not derive the users password with PBKDF2 while decrypting");
 
     db.decrypt(encryption_params.secret_key)
 }
 const OWASP_RECOMMENDED_PBKDF2_ROUNDS: u32 = 600_000;
 
 /// Encrypt and save a database to disk.
-/// The number of PBDKF2 rounds can be optionally provided.
+/// The number of PBKDF2 rounds can be optionally provided.
 /// If not provided, the number of rounds used to decrypt the database will be used.
 /// If the database is new, the default number of rounds will be used.
 pub fn encrypt_and_save_db(
     db: &Database,
     password: String,
     path: &Path,
-    pbdkf2_rounds: Option<u32>,
+    pbkdf2_rounds: Option<u32>,
 ) -> Result<(), DatabaseError> {
     let encryption_key = MasterKey::new(password);
 
     let params = encryption_key
-        .to_decrypt_params(None, pbdkf2_rounds.or(Some(db.pbdkf2_rounds)))
-        .expect("Could not derive the users password with PBDKF2 while encrypting");
+        .to_decrypt_params(None, pbkdf2_rounds.or(Some(db.pbkdf2_rounds)))
+        .expect("Could not derive the users password with PBKDF2 while encrypting");
 
-    if params.pbdkf2_rounds < OWASP_RECOMMENDED_PBKDF2_ROUNDS {
+    if params.pbkdf2_rounds < OWASP_RECOMMENDED_PBKDF2_ROUNDS {
         println!(
-            "Warning: The number of PBDKF2 rounds ({}) is lower than the OWASP recommended value of {}",
-            params.pbdkf2_rounds,
+            "Warning: The number of PBKDF2 rounds ({}) is lower than the OWASP recommended value of {}",
+            params.pbkdf2_rounds,
             OWASP_RECOMMENDED_PBKDF2_ROUNDS
         );
     }

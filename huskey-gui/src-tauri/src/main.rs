@@ -62,7 +62,7 @@ async fn save_database(
     match mutx.deref() {
         Some(db) => {
             let path = Path::new(path);
-            encrypt_and_save_db(db, password, path, Some(db.pbdkf2_rounds))?;
+            encrypt_and_save_db(db, password, path, Some(db.pbkdf2_rounds))?;
             return Ok(());
         }
         None => return Err(AppError::NoDatabaseOpened),
