@@ -10,19 +10,21 @@ use std::{
     sync::Mutex,
 };
 
-use huskey_lib::{create_or_read_db, database::Database, decrypt_db, encrypt_and_save_db};
+use huskey_lib::{
+    create_db,
+    database::{Database, PasswordEntry},
+    decrypt_db, encrypt_and_save_db, read_db,
+};
 impl Default for OpenedDatabase {
     fn default() -> Self {
         return OpenedDatabase {
             database: Mutex::new(None),
-            cached_password: Mutex::new(None),
         };
     }
 }
 
 struct OpenedDatabase {
     database: Mutex<Option<Database>>,
-    cached_password: Mutex<Option<String>>,
 }
 
 #[tauri::command]
@@ -34,7 +36,7 @@ async fn open_database(
     println!("Trying to open db at {}", path);
     let input_path: PathBuf = PathBuf::from(path);
 
-    let encrypted_db = create_or_read_db(&input_path)?;
+    let encrypted_db = read_db(&input_path)?;
     let decrypted_db = decrypt_db(encrypted_db, password.clone());
 
     match decrypted_db {
@@ -62,6 +64,32 @@ async fn save_database(
             let path = Path::new(path);
             encrypt_and_save_db(db, password, path, Some(db.pbdkf2_rounds))?;
             return Ok(());
+        }
+        None => return Err(AppError::NoDatabaseOpened),
+    }
+}
+
+#[tauri::command]
+async fn close_database(opened_database: tauri::State<'_, OpenedDatabase>) -> Result<(), AppError> {
+    let mut d = opened_database.database.lock().unwrap();
+    if (*d).is_none() {
+        return Err(AppError::NoDatabaseOpened);
+    }
+    *d = None;
+    Ok(())
+}
+
+#[tauri::command]
+async fn add_password_entry(
+    entry: PasswordEntry,
+    opened_database: tauri::State<'_, OpenedDatabase>,
+) -> Result<Database, AppError> {
+    let mut d = opened_database.database.lock().unwrap();
+    match d.deref().clone() {
+        Some(mut db) => {
+            db.add_password(entry);
+            *d = Some(db.clone());
+            return Ok(db);
         }
         None => return Err(AppError::NoDatabaseOpened),
     }

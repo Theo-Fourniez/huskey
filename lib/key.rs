@@ -39,7 +39,7 @@ impl MasterKey {
     const NEEDED_OUTPUT_LENGTH: usize = 24;
     pub const DEFAULT_ROUNDS: u32 = 10_000;
 
-    /// Use the PBDKF2 to derive the MasterKey using a salt.
+    /// Use the PBKDF2 (SHA512) to derive the MasterKey using a salt.
     /// If the salt is not provided, a random one is generated.
     /// A random salt must be generated each time the database is saved to prevent rainbow tables attacks.
     /// The most probable error would be a password or a salt considered invalid.

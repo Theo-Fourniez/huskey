@@ -251,7 +251,14 @@ fn try_open_from_path(path: &Path) -> Result<File, io::Error> {
 }
 
 impl EncryptedDatabase {
-    pub fn new(path: &Path) -> Result<Self, DatabaseError> {
+    pub fn new(path: Option<&Path>) -> Result<Self, DatabaseError> {
+        match path {
+            None => Ok(EncryptedDatabase::default()),
+            Some(path) => EncryptedDatabase::try_read(path),
+        }
+    }
+
+    pub fn try_read(path: &Path) -> Result<Self, DatabaseError> {
         match try_open_from_path(&path) {
             Ok(db_file) => {
                 // read raw bytes
@@ -263,14 +270,16 @@ impl EncryptedDatabase {
                     .map_err(|e| DatabaseError::ReadError(e.to_string()))?;
 
                 if read_encrypted_content.len() == 0 {
-                    return Ok(EncryptedDatabase::default());
+                    return Err(DatabaseError::DatabaseDeserializationError(
+                        "The file read is empty, cannot read the database contents".to_string(),
+                    ));
                 }
-                // decrypt db
 
                 return serde_json::from_slice(&read_encrypted_content).map_err(|e| e.into());
             }
             Err(e) => match e.kind() {
                 io::ErrorKind::NotFound => {
+                    // if the file does not exist, return an empty database for now
                     return Ok(EncryptedDatabase::default());
                 }
                 _ => panic!("Could not open the database file: {}", e.to_string()),

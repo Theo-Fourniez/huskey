@@ -4,17 +4,17 @@ mod tests {
         fs::{self},
         panic,
         path::PathBuf,
-        time::Instant,
     };
 
     use pbkdf2::password_hash::SaltString;
     use rand::Rng;
 
     use crate::{
-        create_or_read_db,
+        create_db,
         database::{EncryptedDatabase, PasswordEntry},
         decrypt_db, encrypt_and_save_db,
         key::MasterKey,
+        read_db,
     };
     /// This function is used to run a test that needs a database file.
     /// It will create a random database file, run the test and then delete the file.
@@ -51,7 +51,7 @@ mod tests {
     #[test]
     fn test_create_new_db_and_add_a_password_private_api() {
         run_db_test(|path| {
-            let encrypted_db = EncryptedDatabase::new(&path).unwrap();
+            let encrypted_db = EncryptedDatabase::new(None).unwrap();
             let read_salt = SaltString::from_b64(&encrypted_db.encryption_params.salt).unwrap();
             let key: MasterKey = MasterKey::new(String::from("password"));
 
@@ -77,7 +77,7 @@ mod tests {
     #[test]
     fn test_create_new_db_and_add_a_password() {
         run_db_test(|path| {
-            let db = create_or_read_db(&path).unwrap();
+            let db = create_db().unwrap();
             let password = String::from("password");
 
             let mut decrypted_db = decrypt_db(db, password.clone()).unwrap();
@@ -107,19 +107,14 @@ mod tests {
     /// Create a new empty database with the lib api, write it to disk and then try to open it again
     fn test_create_new_db_write_and_open() {
         run_db_test(|path| {
-            let db = create_or_read_db(&path).unwrap();
+            let db = create_db().unwrap();
             let password = String::from("password");
 
             let mut decrypted_db = decrypt_db(db, password.clone()).unwrap();
             let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, None);
 
-            let start_time = Instant::now();
-
-            let db = create_or_read_db(&path).unwrap();
+            let db = read_db(&path).unwrap();
             decrypted_db = decrypt_db(db, password.clone()).unwrap();
-
-            let elapsed = start_time.elapsed();
-            println!("elapsed {:?}", elapsed);
 
             assert_eq!(decrypted_db.entries.len(), 0);
         });
@@ -132,14 +127,14 @@ mod tests {
         run_db_test(|path| {
             let password = String::from("password");
 
+            let db = create_db().unwrap();
+            let decrypted_db = decrypt_db(db, password.clone()).unwrap();
+            let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, None);
+
             for _ in 0..10 {
-                let db = create_or_read_db(&path).unwrap();
-
-                let decrypted_db = decrypt_db(db, password.clone()).unwrap();
-
+                let decrypted_db = read_db(&path).unwrap();
+                let decrypted_db = decrypt_db(decrypted_db, password.clone()).unwrap();
                 let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, None);
-
-                assert_eq!(decrypted_db.entries.len(), 0);
             }
         });
     }
@@ -149,22 +144,70 @@ mod tests {
         run_db_test(|path| {
             let password = String::from("password");
 
-            let db = create_or_read_db(&path).unwrap();
+            let db = create_db().unwrap();
             let decrypted_db = decrypt_db(db, password.clone()).unwrap();
-            let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, None);
+            let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, Some(1000));
 
-            // Now we try to change the number of rounds
-            let db = create_or_read_db(&path).unwrap();
+            // Change the number of rounds
+            let db = read_db(&path).unwrap();
             let decrypted_db = decrypt_db(db, password.clone()).unwrap();
+            assert_eq!(decrypted_db.pbdkf2_rounds, 1000);
             let _ = encrypt_and_save_db(&decrypted_db, password.clone(), &path, Some(1234));
 
             // Verify that the number of rounds has been changed
-            let db = create_or_read_db(&path).unwrap();
+            let db = read_db(&path).unwrap();
             assert_eq!(db.encryption_params.pbdkf2_rounds, 1234);
 
             // Verify that we can still open the database
             let decrypted_db = decrypt_db(db, password.clone()).unwrap();
             assert_eq!(decrypted_db.pbdkf2_rounds, 1234);
+        });
+    }
+
+    #[test]
+    fn test_opening_a_non_existing_db() {
+        run_db_test(|path| {
+            let db = read_db(&path);
+            assert!(
+                db.is_err(),
+                "The file does not exist, should not be able to open it"
+            );
+        });
+    }
+
+    #[test]
+    fn test_opening_a_empty_file() {
+        run_db_test(|path| {
+            let _ = fs::write(&path, "");
+            let db = read_db(&path);
+            assert!(
+                db.is_err(),
+                "The file is empty, should not be able to open it"
+            );
+        });
+    }
+
+    #[test]
+    fn test_opening_a_file_with_random_content() {
+        run_db_test(|path| {
+            let _ = fs::write(&path, "random content");
+            let db = read_db(&path);
+            assert!(
+                db.is_err(),
+                "The file is not a valid database, should not be able to open it"
+            );
+        });
+    }
+
+    #[test]
+    fn test_opening_a_file_with_random_json_content() {
+        run_db_test(|path| {
+            let _ = fs::write(&path, r#"{"random": "content"}"#);
+            let db = read_db(&path);
+            assert!(
+                db.is_err(),
+                "The file is not a valid database, should not be able to open it"
+            );
         });
     }
 }

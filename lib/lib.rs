@@ -1,6 +1,6 @@
 //! It is a library that can be used to create, read, update and delete passwords from a database.
 //! The database is encrypted and saved to disk.
-//! Using AES-256-GCM for encryption and PBKDF2 for key derivation.
+//! Using AES-256-GCM for encryption and PBKDF2 (SHA512) for key derivation.
 
 use std::path::Path;
 
@@ -14,9 +14,12 @@ mod encryption;
 mod key;
 mod tests;
 
-/// Create a new database or read an existing one from disk.
-pub fn create_or_read_db(path: &Path) -> Result<EncryptedDatabase, DatabaseError> {
-    EncryptedDatabase::new(path)
+pub fn create_db() -> Result<EncryptedDatabase, DatabaseError> {
+    EncryptedDatabase::new(None)
+}
+
+pub fn read_db(path: &Path) -> Result<EncryptedDatabase, DatabaseError> {
+    EncryptedDatabase::new(Some(path))
 }
 
 /// Decrypt a database with the given password.
