@@ -37,7 +37,8 @@ use crate::database::DatabaseEncryptionParams;
 impl MasterKey {
     /// A output of length 24 is needed to be used as the secret in AES256GCM.
     const NEEDED_OUTPUT_LENGTH: usize = 24;
-    pub const DEFAULT_ROUNDS: u32 = 10_000;
+    pub const DEFAULT_ROUNDS: u32 = 1000; // for testing purposes
+    pub const OWASP_RECOMMENDED_PBKDF2_ROUNDS: u32 = 210_000;
 
     /// Use the PBKDF2 (SHA512) to derive the MasterKey using a salt.
     /// If the salt is not provided, a random one is generated.
@@ -51,6 +52,15 @@ impl MasterKey {
         let salt = optional_salt.unwrap_or(SaltString::generate(&mut OsRng));
         let rounds = pbkdf2_rounds.unwrap_or(Self::DEFAULT_ROUNDS);
         let full_master_key = self.password.clone().sha512();
+
+        if rounds < MasterKey::OWASP_RECOMMENDED_PBKDF2_ROUNDS {
+            println!(
+                "Warning: The number of PBKDF2 rounds ({}) is lower than the OWASP recommended value of {}",
+                rounds,
+                MasterKey::OWASP_RECOMMENDED_PBKDF2_ROUNDS
+            );
+        }
+
         let master_key_hash = Pbkdf2.hash_password_customized(
             full_master_key.as_bytes(),
             Some(pbkdf2::Algorithm::Pbkdf2Sha512.ident()),

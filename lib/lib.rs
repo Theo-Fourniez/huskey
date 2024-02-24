@@ -35,7 +35,6 @@ pub fn decrypt_db(db: EncryptedDatabase, password: String) -> Result<Database, D
 
     db.decrypt(encryption_params.secret_key)
 }
-const OWASP_RECOMMENDED_PBKDF2_ROUNDS: u32 = 600_000;
 
 /// Encrypt and save a database to disk.
 /// The number of PBKDF2 rounds can be optionally provided.
@@ -52,14 +51,6 @@ pub fn encrypt_and_save_db(
     let params = encryption_key
         .to_decrypt_params(None, pbkdf2_rounds.or(Some(db.pbkdf2_rounds)))
         .expect("Could not derive the users password with PBKDF2 while encrypting");
-
-    if params.pbkdf2_rounds < OWASP_RECOMMENDED_PBKDF2_ROUNDS {
-        println!(
-            "Warning: The number of PBKDF2 rounds ({}) is lower than the OWASP recommended value of {}",
-            params.pbkdf2_rounds,
-            OWASP_RECOMMENDED_PBKDF2_ROUNDS
-        );
-    }
 
     db.write_to_disk(path, &params)?;
     Ok(())
