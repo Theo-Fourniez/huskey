@@ -37,7 +37,7 @@ async fn open_database(
     let input_path: PathBuf = PathBuf::from(path);
 
     let encrypted_db = read_db(&input_path)?;
-    let decrypted_db = decrypt_db(encrypted_db, password.clone());
+    let decrypted_db = decrypt_db(encrypted_db, password);
 
     match decrypted_db {
         Ok(db) => {
@@ -50,6 +50,23 @@ async fn open_database(
             return Err(e.into());
         }
     };
+}
+
+#[tauri::command]
+async fn create_database(
+    path: &str,
+    password: String,
+    pbkdf2_rounds: Option<u32>,
+    opened_database: tauri::State<'_, OpenedDatabase>,
+) -> Result<Database, AppError> {
+    let input_path: PathBuf = PathBuf::from(path);
+    let db = create_db()?.decrypt(password.clone())?;
+
+    encrypt_and_save_db(&db, password, &input_path, pbkdf2_rounds.or(None))?;
+
+    let mut d = opened_database.database.lock().unwrap();
+    *d = Some(db.clone());
+    return Ok(db);
 }
 
 #[tauri::command]
@@ -95,10 +112,41 @@ async fn add_password_entry(
     }
 }
 
+#[tauri::command]
+async fn edit_password(
+    old_entry: PasswordEntry,
+    new_entry: PasswordEntry,
+    opened_database: tauri::State<'_, OpenedDatabase>,
+) -> Result<Database, AppError> {
+    let mut d = opened_database.database.lock().unwrap();
+    match d.deref().clone() {
+        Some(mut db) => {
+            if old_entry == new_entry {
+                return Ok(db);
+            }
+            if !db.clone().get_entries().contains(&old_entry) {
+                return Err(AppError::EditedEntryNotFound);
+            }
+            db.remove_entry(&old_entry);
+            db.add_password(new_entry);
+            *d = Some(db.clone());
+            return Ok(db);
+        }
+        None => return Err(AppError::NoDatabaseOpened),
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .manage(OpenedDatabase::default())
-        .invoke_handler(tauri::generate_handler![open_database, save_database])
+        .invoke_handler(tauri::generate_handler![
+            open_database,
+            save_database,
+            create_database,
+            close_database,
+            add_password_entry,
+            edit_password
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

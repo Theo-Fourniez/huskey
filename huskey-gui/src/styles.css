@@ -1,9 +1,18 @@
+*{
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+}
 :root {
   --background-colour-light: #f6f6f6;
   --color-light: #0f0f0f;
 
-  --background-colour-dark: #2f2f2f;
-  --color-dark: #f6f6f6;
+  --background-colour-dark: hsl(0, 0%, 18%);
+  --background-colour-dark-lighter: hsl(0, 0%, 22%);
+  --color-dark-text: #f6f6f6;
+  --color-dark-primary: #24c8db;
+  --color-dark-secondary: #646cff;
+  --color-dark-accent: #396cd8;
 
   font-family: sans-serif;
   font-size: 16px;
@@ -11,13 +20,35 @@
   font-weight: 400;
 
   color: var(--color-light);
-  background-color: var(--color-dark);
+  background-color: var(--background-colour-light);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: var(--color-dark-text);
+    background-color: var(--background-colour-dark);
+  }
+
+  input,
+  button {
+    color: #ffffff;
+    background-color: #0f0f0f98;
+  }
+
+  button:active {
+    background-color: #0f0f0f69;
+  }
+
+  textarea {
+    background-color: #000;
+    color: #ffffff;
+  }
 }
 
 .container {
@@ -67,23 +98,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
   transition: border-color 0.25s;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
 }
 
 button {
   cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
 }
 
 input,
@@ -95,34 +115,26 @@ button {
   margin-right: 5px;
 }
 
-textarea {
-  color: #0f0f0f;
-  background-color: #ffffff;
-  padding-top: 20px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: var(--color-dark);
-    background-color: var(--background-colour-dark);
-  }
-
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-
-  button:active {
-    background-color: #0f0f0f69;
-  }
-
-  textarea {
-    background-color: #000;
-    color: #ffffff;
-  }
-}
-
 body{
   margin: 0;
+}
+
+.favicon{
+  width: 32px;
+  height: 32px;
+}
+
+h1{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.row{
+  display: flex;
+  flex-direction: row;
+}
+
+.column{
+  display:flex;
+  flex-direction: column;
 }

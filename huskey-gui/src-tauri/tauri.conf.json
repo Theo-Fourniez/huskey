@@ -14,16 +14,17 @@
     "allowlist": {
       "all": false,
       "shell": {
-        "all": false,
-        "open": true
+        "open": false
       },
       "dialog": {
-        "all": false,
         "ask": false,
         "confirm": false,
         "message": true,
         "open": true,
         "save": true
+      },
+      "window": {
+        "setTitle": true
       },
       "path": {
         "all": true
@@ -32,7 +33,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.theofourniez.huskey-gui",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -48,8 +49,8 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "huskey-gui",
-        "width": 800,
+        "title": "Huskey",
+        "width": 1200,
         "height": 800
       }
     ]
