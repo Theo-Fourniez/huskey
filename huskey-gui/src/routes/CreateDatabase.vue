@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import FileSelector from "@/components/FileSelector.vue"
-import { computed, ref, watch } from "vue";
-import { message } from "@tauri-apps/api/dialog";
-import { databaseState, tryCreateDatabase } from "@/store/useDatabase";
+import DatabaseSelector from "@/components/DatabaseSelector.vue";
 import PasswordInput from "@/components/PasswordInput.vue";
+import { databaseState, tryCreateDatabase } from "@/store/useDatabase";
+import { message } from "@tauri-apps/api/dialog";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import FileSaver from "@/components/FileSaver.vue";
 const selectedPath = ref<string>("");
 const password = ref<string>("");
 
@@ -46,13 +45,13 @@ async function createDatabaseCommand() {
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row" style="gap:2vw">
       <div>
-        <FileSaver @selected="$path => selectedPath = $path" />
+        <DatabaseSelector @selected="$path => selectedPath = $path" :is-selector="false" />
       </div>
-      <div>
+      <div class="column">
         <PasswordInput @change="($password) => password = $password"></PasswordInput>
-        <button @click="createDatabaseCommand">Open database</button>
+        <button @click="createDatabaseCommand">Create database</button>
       </div>
     </div>
 

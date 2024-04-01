@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import FileSelector from "@/components/FileSelector.vue"
-import { computed, onMounted, ref, watch } from "vue";
-import { message } from "@tauri-apps/api/dialog";
-import { databaseState, tryOpenDatabase } from "@/store/useDatabase";
+import DatabaseSelector from "@/components/DatabaseSelector.vue";
 import PasswordInput from "@/components/PasswordInput.vue";
+import { databaseState, tryOpenDatabase } from "@/store/useDatabase";
+import { message } from "@tauri-apps/api/dialog";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { UserAttentionType, appWindow } from "@tauri-apps/api/window";
 const selectedPath = ref<string>("");
 const password = ref<string>("");
 
@@ -47,7 +46,7 @@ async function openDatabaseCommand() {
     </div>
     <div class="row">
       <div>
-        <FileSelector @selected="$path => selectedPath = $path" />
+        <DatabaseSelector @selected="$path => selectedPath = $path" :is-selector="true"/>
       </div>
       <form>
         <PasswordInput @change="$password => password = $password "></PasswordInput>
