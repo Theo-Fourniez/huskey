@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import {  save } from "@tauri-apps/api/dialog";
-import { desktopDir, extname } from '@tauri-apps/api/path';
-
+import { VueElement, ref, watch } from "vue";
+import { open, save } from "@tauri-apps/api/dialog";
+import { desktopDir, extname } from "@tauri-apps/api/path";
 const path = ref("");
 
 const emit = defineEmits<{
@@ -10,16 +9,35 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps({
-  browseBtnText: {
+  buttonText: {
     type: String,
-    default: "Browse"
+    default: "Select"
   },
   pathPlaceholder: {
     type: String,
     default: "Enter a path ..."
+  },
+  isSelector: {
+    type: Boolean,
+    default: true
   }
 });
 
+async function selectFile() {
+  const selectedPath = await open({
+    directory: false, multiple: false, title: 'Open the database', filters: [
+      {
+        name: "Huskey Database",
+        extensions: [
+          'huskey'
+        ]
+      }
+    ]
+  });
+  if (selectedPath === null || Array.isArray(selectedPath)) return;
+  path.value = selectedPath;
+  emit("selected", selectedPath);
+}
 
 async function saveFile() {
   const desktopPath = await desktopDir();
@@ -47,35 +65,17 @@ async function saveFile() {
 }
 
 watch(path, (newPath) => {
-  console.debug("[FileSaver] Path changed to ", newPath);
   emit("selected", newPath);
 });
 </script>
 
 <template>
-  <form class="row" @submit.prevent="saveFile">
-    <textarea id="file-path-input" v-model="path" :placeholder="pathPlaceholder">
-    </textarea>
-    <button type="submit">{{ props.browseBtnText }}</button>  
+  <form class="row" @submit.prevent="isSelector ? selectFile() : saveFile()">
+    <input v-model="path" :placeholder="pathPlaceholder" contenteditable="true">
+    </input>
+    <button>{{ props.buttonText }}</button>
   </form>
-  
 </template>
 
-<style scoped>
-textarea {
-  resize: none;
-  border: none;
-  outline: none;
-  font-size: 1.2em;
-  white-space: pre;
-  vertical-align: middle;
-  padding:5px;
-  line-height: 43px;
-}
-
-@media (prefers-color-scheme: dark) {
-  textarea {
-    background-color: #0f0f0f98;
-  }
-}
+<style>
 </style>
