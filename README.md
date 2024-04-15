@@ -26,6 +26,7 @@ Huskey is a project I created for learning the intricacies of a password manager
 ## Codebase tour
 * All the rust logic of the application is contained in the `lib` folder
 * All the GUI code of the application is contained in the `huskey-gui` folder
+* A workflow testing the rust logic is found in the `.github` folder
 
 ## License
 Huskey is licensed under the GNUGPLv3 License. See the [COPYING](./COPYING) file for details.
