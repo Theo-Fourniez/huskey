@@ -20,6 +20,7 @@ Huskey is a project I created for learning the intricacies of a password manager
 
 ### Improvements ideas / roadmap
 - [ ] Look into code coverage reports with [tarpaulin](https://github.com/xd009642/tarpaulin)
+- [ ] Adding GUI tests with [tauri-driver](https://tauri.app/v1/guides/testing/webdriver/introduction/)
 - [ ] Add 2FA support (TOTP)
 - [ ] Support for other encryption algorithms like ChaCha20
 - [ ] Protecting the process against low priviledged attackers ? (using the secmem-proc crate)
