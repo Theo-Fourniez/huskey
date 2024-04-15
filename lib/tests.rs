@@ -147,7 +147,7 @@ mod tests {
             let db = read_db(&path);
             assert!(
                 db.is_err(),
-                "The file does not exist, should not be able to open it"
+                "The file does not exist, should not be able to read it"
             );
         });
     }
@@ -159,7 +159,7 @@ mod tests {
             let db = read_db(&path);
             assert!(
                 db.is_err(),
-                "The file is empty, should not be able to open it"
+                "The file is empty, should not be able to read it"
             );
         });
     }
@@ -171,7 +171,7 @@ mod tests {
             let db = read_db(&path);
             assert!(
                 db.is_err(),
-                "The file is not a valid database, should not be able to open it"
+                "The file is not a valid database, should not be able to read it"
             );
         });
     }
@@ -183,7 +183,7 @@ mod tests {
             let db = read_db(&path);
             assert!(
                 db.is_err(),
-                "The file is not a valid database, should not be able to open it"
+                "The file is not a valid database, should not be able to read it"
             );
         });
     }
