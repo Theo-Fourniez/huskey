@@ -19,6 +19,7 @@ Huskey is a project I created for learning the intricacies of a password manager
 * [AES-256-GCM](https://www.cryptosys.net/pki/manpki/pki_aesgcmauthencryption.html) : for encrypting the database file and assuring its integrity (aka *military grade encryption*)
 
 ### Improvements ideas / roadmap
+- [ ] Look into code coverage reports with [tarpaulin](https://github.com/xd009642/tarpaulin)
 - [ ] Add 2FA support (TOTP)
 - [ ] Support for other encryption algorithms like ChaCha20
 - [ ] Protecting the process against low priviledged attackers ? (using the secmem-proc crate)
