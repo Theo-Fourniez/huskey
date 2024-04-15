@@ -10,22 +10,14 @@ You should have received a copy of the GNU General Public License along with Hus
 
 #[cfg(test)]
 mod tests {
+    use rand::Rng;
     use std::{
         fs::{self},
         panic,
         path::PathBuf,
     };
 
-    use pbkdf2::password_hash::SaltString;
-    use rand::Rng;
-
-    use crate::{
-        create_db,
-        database::{EncryptedDatabase, PasswordEntry},
-        decrypt_db, encrypt_and_save_db,
-        key::MasterKey,
-        read_db,
-    };
+    use crate::{create_db, database::PasswordEntry, decrypt_db, encrypt_and_save_db, read_db};
     /// This test fixture is used to run a test that needs a database file.
     /// It will create a random database file, run the test and then delete the file.
     /// This function is used to prevent the database file to be left on the disk if the test fails.
