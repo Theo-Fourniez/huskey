@@ -1,36 +1,53 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from "vue";
-import { PasswordEntry } from "@/types/huskeyTypes";
 import { addPasswordEntry, editPasswordEntry } from "@/store/useDatabase";
+import { PasswordEntry } from "@/types/huskeyTypes";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
-const router = useRouter();
+// If this component is used to create a new entry (the entry prop is not passed or is default)
+// it will navigate back to the previous page after adding the entry
+// If the entry prop is passed, it will edit the entry and assume its not used as a route
 
-const props = defineProps<{
-  entry: PasswordEntry
-}>();
+// https://vuejs.org/api/sfc-script-setup.html#default-props-values-when-using-type-declaration
+export interface Props {
+  entry?: PasswordEntry
+}
 
-const isNewEntry = ref(true);
-
-let entry = {...props.entry};
-let initialEntry = {...props.entry};
+const props = withDefaults(defineProps<Props>(), {
+  entry: () => {
+    return {
+      name: "",
+      password: "",
+      username: "",
+    }
+  }
+});
 
 const emit = defineEmits<{edited: [edited: PasswordEntry]}>();
 
-const emitEdit = () => {
+const emitEvent = () => {
   emit("edited", entry);
 }
+
+const router = useRouter();
+
+const isNewEntry = ref(true);
+// The entry that is being edited (reactive)
+let entry = props.entry;
+// The entry first passed unedited (non reactive)
+let initialEntry = {...props.entry};
 
 onMounted(() => {
   isNewEntry.value = entry.name === "" && entry.username === "" && entry.password === "" && (entry.url === "" || entry.url === undefined);
 });
 
 const submitForm = async () => {
-  emitEdit();
+  emitEvent();
   if(isNewEntry.value){
     await addPasswordEntry(entry);
+    router.back();
   } else{
-    await editPasswordEntry(initialEntry, entry);  
+    await editPasswordEntry(initialEntry, entry);
     initialEntry = {...entry};
   }
 }
@@ -46,12 +63,12 @@ watch(props, ()=>{
 <template>
   <div>
     <h1>{{ title }}</h1>
-    <form @submit.prevent="submitForm" style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;">
+    <form style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;" @submit.prevent="submitForm">
       <input type="text" placeholder="Enter name" v-model="entry.name">
       <input type="text" placeholder="Enter username" v-model="entry.username">
       <input type="password" placeholder="Enter a password..." v-model="entry.password">
       <input type="text" placeholder="Enter URL" v-model="entry.url">
-      <button>{{ callToAction }}</button>
+      <button type="submit">{{ callToAction }}</button>
     </form>
   </div>
 

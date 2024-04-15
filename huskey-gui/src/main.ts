@@ -6,9 +6,8 @@ import LandingScreen from "@/routes/LandingScreen.vue";
 import OpenDatabase from "@/routes/OpenDatabase.vue";
 import CreateDatabase from "@/routes/CreateDatabase.vue";
 import OpenedDatabase from "@/routes/OpenedDatabase.vue";
-import PasswordEdit from "@/routes/PasswordEdit.vue";
+import PasswordEdit from "@/components/PasswordEdit.vue";
 import { databaseState } from "./store/useDatabase";
-import { register } from "@tauri-apps/api/globalShortcut";
 
 const routes = [
   { path: '/', component: LandingScreen },
@@ -16,7 +15,6 @@ const routes = [
   { path: '/create', component: CreateDatabase },
   { path: '/database', component: OpenedDatabase }, 
   { path: '/database/create', component: PasswordEdit },
-  { path: '/database/edit/:id', component: PasswordEdit },
   { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 
@@ -25,7 +23,7 @@ const router = createRouter({
   routes,
 });
 
-// if after /database and database not open redirect to /
+// if on the database ui and the database is not open, redirect to the landing screen
 router.beforeEach((to, from, next) => {
   if (to.path.startsWith("/database") && !databaseState.database) {
     next("/");
