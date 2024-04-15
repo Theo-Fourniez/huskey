@@ -1,26 +1,17 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-
 const router = useRouter();
-
-function goToCreateDatabase(){
-  router.push("/create");
-}
-
-function goToOpenDatabase(){
-  router.push("/open");
-}
 </script>
 
 <template>
   <div>
     <div class="container">
       <div class="row">
-        <div class="card" @click="goToCreateDatabase">
+        <div class="card" @click="router.push('/create')">
           <h2>Create a vault</h2>
           <a style="font-size: 2.5rem; color: #f7f7f7;">🛠️</a>
         </div>
-        <div class="card" @click="goToOpenDatabase">
+        <div class="card" @click="  router.push('/open')">
           <h2>Open a vault</h2>
           <a style="font-size: 2.5rem; color: #f7f7f7;">🔑</a>
         </div>
