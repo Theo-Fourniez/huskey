@@ -40,7 +40,7 @@ async function createDatabaseCommand() {
     <div class="container">
       <div class="row">
         <div class="card">
-          <h2>Create a database</h2>
+          <h2>Create a vault</h2>
           <a style="font-size: 2.5rem; color: #f7f7f7;" @click="createDatabaseCommand">🛠️</a>
         </div>
       </div>
@@ -49,10 +49,10 @@ async function createDatabaseCommand() {
       <div>
         <DatabaseSelector @selected="$path => selectedPath = $path" :is-selector="false" />
       </div>
-      <div class="column">
+      <form class="column" @submit.prevent="createDatabaseCommand">
         <PasswordInput @change="($password) => password = $password"></PasswordInput>
-        <button @click="createDatabaseCommand">Create database</button>
-      </div>
+        <button type="submit">Create vault</button>
+      </form>
     </div>
 
   </div>
