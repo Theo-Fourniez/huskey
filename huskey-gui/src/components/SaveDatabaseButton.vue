@@ -17,7 +17,7 @@ const saveDatabase = async () => {
 </script>
 
 <template>
-  <button @click="saveDatabase()" v-if="databaseState && databaseState.hasUnsavedChanges">💾</button>
+  <button @click="saveDatabase()" v-if="databaseState && databaseState.hasUnsavedChanges">Save</button>
 </template>
 
 <style scoped>

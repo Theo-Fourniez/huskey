@@ -9,7 +9,7 @@ const goToNewEntry = async () => {
 </script>
 
 <template>
-  <button @click="goToNewEntry()" v-if="databaseState" style="background-color: #2d5bd3; font-size: 25px; padding: 5px;">Add</button>
+  <button @click="goToNewEntry()" v-if="databaseState">Create</button>
 </template>
 
 <style scoped>
