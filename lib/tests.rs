@@ -26,7 +26,7 @@ mod tests {
         key::MasterKey,
         read_db,
     };
-    /// This function is used to run a test that needs a database file.
+    /// This test fixture is used to run a test that needs a database file.
     /// It will create a random database file, run the test and then delete the file.
     /// This function is used to prevent the database file to be left on the disk if the test fails.
     fn run_db_test<T>(test: T) -> ()
@@ -56,31 +56,6 @@ mod tests {
         if path.try_exists().unwrap() {
             let _ = fs::remove_file(path);
         };
-    }
-
-    #[test]
-    fn test_create_new_db_and_add_a_password_private_api() {
-        run_db_test(|path| {
-            let encrypted_db = EncryptedDatabase::new(None).unwrap();
-            let read_salt = SaltString::from_b64(&encrypted_db.encryption_params.salt).unwrap();
-            let key: MasterKey = MasterKey::new(String::from("password"));
-
-            let encryption_params = key.to_decrypt_params(Some(read_salt), Some(1000)).unwrap();
-
-            let mut db = encrypted_db
-                .decrypt(encryption_params.secret_key.clone())
-                .unwrap();
-
-            db.add_password(PasswordEntry {
-                name: "Test entry".to_string(),
-                username: "Username".to_string(),
-                password: "SuperSecretPassword".to_string(),
-                url: None,
-            });
-
-            let _ = db.write_to_disk(&path, &encryption_params);
-            assert_eq!(db.entries.len(), 1);
-        });
     }
 
     /// A test used to check if we can create a new database, add a password and then save it to disk
