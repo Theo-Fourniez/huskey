@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addPasswordEntry, editPasswordEntry } from "@/store/useDatabase";
+import { addPasswordEntry, removePasswordEntry, editPasswordEntry } from "@/store/useDatabase";
 import { PasswordEntry } from "@/types/huskeyTypes";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
@@ -41,7 +41,7 @@ onMounted(() => {
   isNewEntry.value = entry.name === "" && entry.username === "" && entry.password === "" && (entry.url === "" || entry.url === undefined);
 });
 
-const submitForm = async () => {
+const submitEditForm = async () => {
   emitEvent();
   if(isNewEntry.value){
     await addPasswordEntry(entry);
@@ -49,6 +49,13 @@ const submitForm = async () => {
   } else{
     await editPasswordEntry(initialEntry, entry);
     initialEntry = {...entry};
+  }
+}
+
+const deleteEntry = async () => {
+  if(!isNewEntry.value){
+    await removePasswordEntry(entry);
+    emitEvent();
   }
 }
 
@@ -61,15 +68,18 @@ watch(props, ()=>{
 </script>
 
 <template>
-  <div>
+  <div class="column" style="gap: 1rem; align-items: center;">
     <h1>{{ title }}</h1>
-    <form style="display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px;" @submit.prevent="submitForm">
+    <form class="column" style="justify-content: center; align-items: center; gap: 0.75rem;" @submit.prevent="submitEditForm">
       <input type="text" placeholder="Enter name" v-model="entry.name">
       <input type="text" placeholder="Enter username" v-model="entry.username">
       <input type="password" placeholder="Enter a password..." v-model="entry.password">
       <input type="text" placeholder="Enter URL" v-model="entry.url">
-      <button type="submit">{{ callToAction }}</button>
+      <button type="submit" style="background-color: var(--color-dark-accent);">{{ callToAction }}</button>
     </form>
+    <div class="row" v-if="!isNewEntry">
+      <button style="justify-self: center" @click="deleteEntry">Delete</button>
+    </div>
   </div>
 
 

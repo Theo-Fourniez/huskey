@@ -113,7 +113,7 @@ async fn add_password_entry(
 }
 
 #[tauri::command]
-async fn edit_password(
+async fn edit_password_entry(
     old_entry: PasswordEntry,
     new_entry: PasswordEntry,
     opened_database: tauri::State<'_, OpenedDatabase>,
@@ -125,10 +125,29 @@ async fn edit_password(
                 return Ok(db);
             }
             if !db.clone().get_entries().contains(&old_entry) {
-                return Err(AppError::EditedEntryNotFound);
+                return Err(AppError::EntryNotFound);
             }
             db.remove_entry(&old_entry);
             db.add_password(new_entry);
+            *d = Some(db.clone());
+            return Ok(db);
+        }
+        None => return Err(AppError::NoDatabaseOpened),
+    }
+}
+
+#[tauri::command]
+async fn remove_password_entry(
+    entry: PasswordEntry,
+    opened_database: tauri::State<'_, OpenedDatabase>,
+) -> Result<Database, AppError> {
+    let mut d = opened_database.database.lock().unwrap();
+    match d.deref().clone() {
+        Some(mut db) => {
+            let removed = db.remove_entry(&entry);
+            if removed.is_none() {
+                return Err(AppError::EntryNotFound);
+            }
             *d = Some(db.clone());
             return Ok(db);
         }
@@ -145,7 +164,8 @@ fn main() {
             create_database,
             close_database,
             add_password_entry,
-            edit_password
+            edit_password_entry,
+            remove_password_entry
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

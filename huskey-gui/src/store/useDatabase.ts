@@ -51,7 +51,14 @@ export async function addPasswordEntry(entry: PasswordEntry) : Promise<void> | n
 
 export async function editPasswordEntry(oldEntry: PasswordEntry, newEntry: PasswordEntry) : Promise<void> | never{
     console.log("Edit password entry command invoked with old entry: ", oldEntry, " and new entry: ", newEntry);
-    const updatedDatabase: HuskeyDatabase = await invoke('edit_password', {oldEntry, newEntry});
+    const updatedDatabase: HuskeyDatabase = await invoke('edit_password_entry', {oldEntry, newEntry});
+    databaseState.database = updatedDatabase;
+    databaseState.hasUnsavedChanges = true;
+}
+
+export async function removePasswordEntry(entry: PasswordEntry) : Promise<void> | never{
+    console.log("Remove password entry command invoked with entry: ", entry);
+    const updatedDatabase: HuskeyDatabase = await invoke('remove_password_entry', {entry});
     databaseState.database = updatedDatabase;
     databaseState.hasUnsavedChanges = true;
 }

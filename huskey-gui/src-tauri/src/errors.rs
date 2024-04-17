@@ -5,7 +5,7 @@ use serde::Serialize;
 pub(crate) enum AppError {
     PasswordDatabaseError(String),
     NoDatabaseOpened,
-    EditedEntryNotFound,
+    EntryNotFound,
 }
 
 impl From<DatabaseError> for AppError {
