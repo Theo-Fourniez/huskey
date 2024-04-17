@@ -2,17 +2,17 @@ name: Build and test core library
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ 'main' ]
     paths:
-      - "lib/**"
-      - "Cargo.lock"
-      - "Cargo.toml"
+      - './lib/**'
+      - 'Cargo.lock'
+      - 'Cargo.toml'
   pull_request:
-    branches: [ "main" ]
+    branches: [ 'main' ]
     paths:
-      - "lib/**"
-      - "Cargo.lock"
-      - "Cargo.toml"
+      - './lib/**'
+      - 'Cargo.lock'
+      - 'Cargo.toml'
 
 env:
   CARGO_TERM_COLOR: always
