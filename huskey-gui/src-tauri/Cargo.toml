@@ -1,10 +1,10 @@
 [package]
 name = "huskey-gui"
-version = "0.0.0"
+version = "0.0.1"
 description = "The graphical user interface for the Huskey backend"
-authors = ["you"]
-license = ""
-repository = ""
+authors = ["Théo Fourniez"]
+license = "GPL-3.0-only"
+repository = "https://github.com/Theo-Fourniez/huskey/"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -1260,7 +1260,7 @@ checksum = "21dec9db110f5f872ed9699c3ecf50cf16f423502706ba5c72462e28d3157573"
 
 [[package]]
 name = "huskey"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "aes-gcm",
  "pbkdf2",
@@ -1275,7 +1275,7 @@ dependencies = [
 
 [[package]]
 name = "huskey-gui"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "huskey",
  "serde",

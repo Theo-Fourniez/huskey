@@ -1,9 +1,9 @@
 [package]
 name = "huskey"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 description="Rust password manager (uses AES-256-GCM + PBKDF2 + SHA-256)"
-license=""
+license="GPL-3.0-only"
 authors=["Théo Fourniez"]
 
 [lib]
