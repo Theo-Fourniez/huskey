@@ -1,6 +1,16 @@
 # Huskey
 ## Overview
-Huskey is a project I created for learning the intricacies of a password manager and its cryptography. It was also created as a fun side project to be more familiar with Rust.
+Huskey is a work in progress project I created for learning the intricacies of a password manager and its cryptography. It was also created as a fun side project to be more familiar with Rust.
+
+## Screenshots
+### Opened vault
+![](huskey-gui/screenshots/opened_vault.png)
+
+### Editing an entry in a vault
+![](huskey-gui/screenshots/opened_vault_editing_entry.png)
+
+## Disclaimer 
+This project is not finished nor polished to the quality standard I usually apply to myself. I decided to publish it anyway to put it out there.
 
 ## Features
 * **Secure storage** : Store passwords safely, they are encrypted at rest 
