@@ -12,7 +12,7 @@ const props = defineProps<{
 
 <template>
     <div class="entry-container" @click="$emit('edit', props.entry)">
-        <EntryIcon :url="props.entry.url"></EntryIcon>
+        <EntryIcon></EntryIcon>
         <div class="entry-text">
             <p style="font-weight: bold;">{{props.entry.name}}</p>
             <p>{{ props.entry.username }}</p>
