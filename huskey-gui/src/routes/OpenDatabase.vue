@@ -40,7 +40,7 @@ async function openDatabaseCommand() {
       <div class="row">
         <div class="card">
           <h2>Open a vault</h2>
-          <a style="font-size: 2.5rem; color: #f7f7f7;" @click="openDatabaseCommand">🔑</a>
+          <a style="font-size: 2.5rem;">🔑</a>
         </div>
       </div>
     </div>

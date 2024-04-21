@@ -41,7 +41,7 @@ async function createDatabaseCommand() {
       <div class="row">
         <div class="card">
           <h2>Create a vault</h2>
-          <a style="font-size: 2.5rem; color: #f7f7f7;" @click="createDatabaseCommand">🛠️</a>
+          <a style="font-size: 2.5rem;">🛠️</a>
         </div>
       </div>
     </div>
