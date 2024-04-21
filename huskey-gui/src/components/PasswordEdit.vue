@@ -3,6 +3,8 @@ import { addPasswordEntry, removePasswordEntry, editPasswordEntry } from "@/stor
 import { PasswordEntry } from "@/types/huskeyTypes";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import ClipboardIcon from "./ClipboardIcon.vue";
+import InputIcon from "./InputIcon.vue";
 
 // If this component is used to create a new entry (the entry prop is not passed or is default)
 // it will navigate back to the previous page after adding the entry
@@ -65,16 +67,20 @@ const callToAction = computed(() => { return isNewEntry.value ? "Add" : "Save"})
 watch(props, ()=>{
   entry = props.entry;
 });
+
+const copyToClipboard = async (toCopy: string) => {
+  return navigator.clipboard.writeText(toCopy);
+}
 </script>
 
 <template>
   <div class="column" style="gap: 1rem; align-items: center;">
     <h1>{{ title }}</h1>
     <form class="column" style="justify-content: center; align-items: center; gap: 0.75rem;" @submit.prevent="submitEditForm">
-      <input type="text" placeholder="Enter name" v-model="entry.name">
-      <input type="text" placeholder="Enter username" v-model="entry.username">
-      <input type="password" placeholder="Enter a password..." v-model="entry.password">
-      <input type="text" placeholder="Enter URL" v-model="entry.url">
+      <InputIcon v-model="entry.name" icon="fa-copy" placeholder="Enter name" @icon-click="copyToClipboard(entry.name)"></InputIcon>
+      <InputIcon v-model="entry.username" icon="fa-copy" placeholder="Enter username" @icon-click="copyToClipboard(entry.username)"></InputIcon>
+      <InputIcon v-model="entry.password" icon="fa-copy" placeholder="Enter a password..." @icon-click="copyToClipboard(entry.password)"></InputIcon>
+      <InputIcon v-model="entry.url" icon="fa-copy" placeholder="Enter URL" @icon-click="copyToClipboard(entry.url ?? '')"></InputIcon>
       <button type="submit" style="background-color: var(--color-dark-accent);">{{ callToAction }}</button>
     </form>
     <div class="row" v-if="!isNewEntry">
