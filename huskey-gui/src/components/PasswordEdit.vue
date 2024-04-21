@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { addPasswordEntry, removePasswordEntry, editPasswordEntry } from "@/store/useDatabase";
+import { addPasswordEntry, editPasswordEntry, removePasswordEntry } from "@/store/useDatabase";
 import { PasswordEntry } from "@/types/huskeyTypes";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import ClipboardIcon from "./ClipboardIcon.vue";
 import InputIcon from "./InputIcon.vue";
 
 // If this component is used to create a new entry (the entry prop is not passed or is default)

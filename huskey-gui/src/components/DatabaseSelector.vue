@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { VueElement, ref, watch } from "vue";
 import { open, save } from "@tauri-apps/api/dialog";
-import { desktopDir, extname } from "@tauri-apps/api/path";
+import { desktopDir } from "@tauri-apps/api/path";
+import { ref, watch } from "vue";
 const path = ref("");
 
 const emit = defineEmits<{

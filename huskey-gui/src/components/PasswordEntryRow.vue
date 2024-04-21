@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { PasswordEntry } from "@/types/huskeyTypes";
-import { getFavicon } from "@/utilities";
-import { computed, ref } from "vue";
 import EntryIcon from "./EntryIcon.vue";
 
 const props = defineProps<{

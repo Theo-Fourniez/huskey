@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { databaseState, tryCloseDatabase, isDatabaseOpen } from "@/store/useDatabase";
+import { isDatabaseOpen, tryCloseDatabase } from "@/store/useDatabase";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { databaseState, tryOpenDatabase } from "@/store/useDatabase";
+import CreateEntryButon from "@/components/CreateEntryButon.vue";
 import PasswordEntriesTable from "@/components/PasswordEntriesTable.vue";
 import SaveDatabaseButton from "@/components/SaveDatabaseButton.vue";
-import CreateEntryButon from "@/components/CreateEntryButon.vue";
+import { databaseState } from "@/store/useDatabase";
 
 </script>
 
