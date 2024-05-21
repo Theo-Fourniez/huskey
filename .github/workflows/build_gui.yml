@@ -20,6 +20,9 @@ jobs:
       with:
         #node-version: 
         node-version-file: ./huskey-gui/.nvmrc 
+        cache: 'npm'
+        cache-dependency-path: huskey-gui/package-lock.json
+
     - name: Install Node.js dependencies
       run: cd huskey-gui && npm install
     
@@ -29,18 +32,14 @@ jobs:
     - name: Build tauri project
       run: cd huskey-gui && npm run tauri build
 
-    - name: Archive build artifacts
-      run: |
-        tar -czvf build_linux_appimage.tar.gz huskey-gui/src-tauri/target/release/bundle/appimage/*.AppImage 
-        tar -czvf build_linux_deb.tar.gz huskey-gui/src-tauri/target/release/bundle/deb/*.deb
-
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts
+        name: build-artifacts-linux
         path: |
-            build_linux_appimage.tar.gz
-            build_linux_deb.tar.gz
+            huskey-gui/src-tauri/target/release/bundle/appimage/*.AppImage 
+            huskey-gui/src-tauri/target/release/bundle/deb/*.deb
+
 
   create_release:
     runs-on: ubuntu-latest
@@ -52,5 +51,5 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "build_linux_appimage.tar.gz,build_linux_deb.tar.gz"
+        artifacts: "build-artifacts-linux.zip"
         body: "## Automated Huskey release !"
