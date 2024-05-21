@@ -1,0 +1,52 @@
+name: Build and Release Huskey GUI 🚀
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # Matches version tags like v1.0.0, v1.1.0, etc.
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.Js environment
+      uses: actions/setup-node@v4.0.2
+      with:
+        #node-version: 
+        node-version-file: ./huskey-gui/.nvmrc 
+    - name: Install Node.js dependencies
+      run: cd huskey-gui && npm install
+    
+    - name: Build tauri project
+      run: cargo tauri build
+
+    - name: Archive build artifacts
+      run: |
+        cd huskey-gui/src-tauri/target/release/bundle/ 
+        && tar -czvf build_linux_appimage.tar.gz appimage/*.AppImage 
+        && tar -czvf build_linux_deb.tar.gz deb/*.deb
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+            build_linux_appimage.tar.gz
+            build_linux_deb.tar.gz
+
+  create_release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "build_linux_appimage.tar.gz, build_linux_deb.tar.gz"
+        body: "## Automated Huskey release !"
