@@ -1,4 +1,5 @@
 # Huskey
+[![Build and test core library](https://github.com/Theo-Fourniez/huskey/actions/workflows/library_test.yml/badge.svg)](https://github.com/Theo-Fourniez/huskey/actions/workflows/library_test.yml)
 ## Overview
 Huskey is a work in progress project I created for learning the intricacies of a password manager and its cryptography. It was also created as a fun side project to be more familiar with Rust.
 
