@@ -22,18 +22,14 @@ jobs:
         node-version-file: ./huskey-gui/.nvmrc 
     - name: Install Node.js dependencies
       run: cd huskey-gui && npm install
-    
-    - name: Install cargo dependenciess
-      run: cargo build
 
     - name: Build tauri project
-      run: cargo tauri build
+      run: cd huskey-gui && npm run tauri build
 
     - name: Archive build artifacts
       run: |
-        cd huskey-gui/src-tauri/target/release/bundle/ 
-        && tar -czvf build_linux_appimage.tar.gz appimage/*.AppImage 
-        && tar -czvf build_linux_deb.tar.gz deb/*.deb
+        tar -czvf build_linux_appimage.tar.gz huskey-gui/src-tauri/target/release/bundle/appimage/*.AppImage 
+        tar -czvf build_linux_deb.tar.gz huskey-gui/src-tauri/target/release/bundle/deb/*.deb
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
