@@ -49,6 +49,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts-linux
     - uses: ncipollo/release-action@v1
       with:
         artifacts: "build-artifacts-linux"
