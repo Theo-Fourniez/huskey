@@ -22,7 +22,10 @@ jobs:
         node-version-file: ./huskey-gui/.nvmrc 
     - name: Install Node.js dependencies
       run: cd huskey-gui && npm install
-
+    
+    - name: Install tauri build tools requirements
+      run: apt install -y libwebkit2gtk-4.0-dev build-essential wget libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev
+      
     - name: Build tauri project
       run: cd huskey-gui && npm run tauri build
 
