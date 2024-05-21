@@ -51,5 +51,5 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "build-artifacts-linux.zip"
+        artifacts: "build-artifacts-linux"
         body: "## Automated Huskey release !"
