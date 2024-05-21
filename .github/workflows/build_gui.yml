@@ -48,5 +48,5 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "build_linux_appimage.tar.gz, build_linux_deb.tar.gz"
+        artifacts: "build_linux_appimage.tar.gz,build_linux_deb.tar.gz"
         body: "## Automated Huskey release !"
