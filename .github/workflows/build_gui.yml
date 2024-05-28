@@ -54,5 +54,5 @@ jobs:
         name: build-artifacts-linux
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "build-artifacts-linux"
+        artifacts: "${{ github.workspace }}/build-artifacts-linux.zip"
         body: "## Automated Huskey release !"
