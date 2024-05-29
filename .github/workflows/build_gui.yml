@@ -55,8 +55,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - uses: actions/download-artifact@v4
-      with:
-        name: build-artifacts-linux
+    - name: Zip artifacts
+      shell: pwsh
+      run: |
+          if ($env:RUNNER_OS -eq "Windows") {
+            7z a build-artifacts-windows.zip build-artifacts-windows 
+          }
+          else {
+            zip -r build-artifacts-linux.zip build-artifacts-linux
+          }
+
     - name: Display structure of downloaded files
       run: ls -R
     - uses: ncipollo/release-action@v1
