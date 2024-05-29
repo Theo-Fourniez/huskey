@@ -63,6 +63,7 @@ jobs:
           }
           else {
             zip -r build-artifacts-linux.zip build-artifacts-linux
+            rm -rf build-artifacts-linux
           }
 
     - name: Display structure of downloaded files
