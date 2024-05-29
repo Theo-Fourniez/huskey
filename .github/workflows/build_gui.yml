@@ -10,7 +10,7 @@ env:
 
 jobs:
   build:
-    runs-on: [ubuntu-latest, windows-latest]
+    runs-on: [ubuntu-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -45,10 +45,6 @@ jobs:
         path: |
             huskey-gui/src-tauri/target/release/bundle/appimage/*.AppImage 
             huskey-gui/src-tauri/target/release/bundle/deb/*.deb
-    - name: Upload windows build artifacts
-      if: ${{matrix.os == 'windows-latest'}}
-      run: dir /s
-      shell: cmd
 
 
   create_release:
