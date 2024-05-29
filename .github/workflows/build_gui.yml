@@ -70,5 +70,5 @@ jobs:
       run: ls -R
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "build-artifacts-linux"
+        artifacts: "build-artifacts-linux.zip"
         body: "## Automated Huskey release !"
