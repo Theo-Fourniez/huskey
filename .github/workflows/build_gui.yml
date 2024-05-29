@@ -9,7 +9,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  build_linux:
     runs-on: ubuntu-latest
 
     steps:
@@ -36,7 +36,7 @@ jobs:
 
     - name: Build tauri project
       run: cd huskey-gui && npm run tauri build
-      
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
         contents: write
-    needs: build
+    needs: build_linux
 
     steps:
     - uses: actions/checkout@v4
@@ -59,5 +59,5 @@ jobs:
       run: ls -R
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "${{ github.workspace }}/build-artifacts-linux.zip"
+        artifacts: "build-artifacts-linux"
         body: "## Automated Huskey release !"
