@@ -45,4 +45,5 @@ This project is not finished nor polished to the quality standard I usually appl
 Huskey is licensed under the GNUGPLv3 License. See the [COPYING](./COPYING) file for details.
 
 ## Contact 
-If you're looking for a passionate graduate engineer with 3 years of work experience wanting to work with Rust or in open source, [look no further](https://www.linkedin.com/in/theo-fourniez/)
+If you're looking for a passionate graduate engineer with 3 years of work experience [look no further](https://www.linkedin.com/in/theo-fourniez/)
+See my other projects [on my github profile](https://github.com/Theo-Fourniez)
